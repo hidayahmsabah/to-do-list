@@ -10,6 +10,8 @@ const theme = document.querySelector(".app-theme");
 
 let originalText = "Create a new todo...";
 
+// event to input a new to do item
+
 newText.addEventListener("click", e => {
     if (newText.innerText === originalText) {
         newText.classList.add("cursor-text");
@@ -19,10 +21,13 @@ newText.addEventListener("click", e => {
         if (e.keyCode === 13) {
             createItem(newText.innerText);
             e.preventDefault();
+            newText.blur();
         }
     })
 
 })
+
+// event to add a new to do item
 
 newAdd.addEventListener("click", () => {
     createItem(newText.innerText);
@@ -50,7 +55,7 @@ function createItem(todoItem) {
             addingList.insertAdjacentElement('beforeend', cross);
             lastRow.insertAdjacentElement('beforebegin', addingList);
 
-            updateNumber4();
+            updateNumber();
 
             let current = document.querySelector(".current").classList[0];
             filter(current);
@@ -59,13 +64,7 @@ function createItem(todoItem) {
     }
 }
 
-function deleteItem(mainPath) {
-    if (mainPath[0].classList.contains("delete")) {
-        mainPath[1].remove();
-    }
-
-    updateNumber4();
-}
+// events inside main lists area to delete a list or mark as completed
 
 mainList.addEventListener("click", e => {
     let path = e.path;
@@ -73,7 +72,14 @@ mainList.addEventListener("click", e => {
     completedItem(path);
     let current = document.querySelector(".current").classList[0];
     filter(current);
+    updateNumber();
 })
+
+function deleteItem(mainPath) {
+    if (mainPath[0].classList.contains("delete")) {
+        mainPath[1].remove();
+    }
+}
 
 function completedItem(mainPath) {
     if (mainPath[0].classList.contains("circle")) {
@@ -81,10 +87,9 @@ function completedItem(mainPath) {
         mainPath[1].classList.toggle("complete");
         mainPath[1].children[1].classList.toggle("strikethrough");
     }
-
-    updateNumber4();
-
 }
+
+// event to use the navigations (all, active, completed)
 
 for (let links of nav) {
     links.addEventListener("click", (e) => {
@@ -115,6 +120,10 @@ function filter(x) {
     })
 }
 
+//event to clear all completed items
+
+clearCompleted.addEventListener("click", clearComplete);
+
 function clearComplete() {
     let mlChildren = mainList.children;
     let len = mlChildren.length - 1;
@@ -125,9 +134,7 @@ function clearComplete() {
     };
 }
 
-clearCompleted.addEventListener("click", clearComplete);
-
-function updateNumber4() {
+function updateNumber() {
     let mlChildren = document.querySelectorAll(".list");
     let i = 0;
     mlChildren.forEach(el => {
@@ -148,6 +155,8 @@ function updateNumber4() {
     }
 }
 
+// event handlers for exiting the new item text area
+
 window.onclick = function (e) {
     if (newText.innerText !== originalText) {
         let target = e.target;
@@ -157,6 +166,15 @@ window.onclick = function (e) {
         }
     }
 }
+
+document.onkeydown = function (e) {
+    let evt = e || window.event;
+    if (evt.keyCode === 27) {
+        newText.blur();
+    }
+}
+
+// drag and drop desktop 
 
 mainList.addEventListener("dragstart", e => {
     let dragged = e.target;
@@ -181,9 +199,34 @@ mainList.addEventListener("dragover", e => {
     }
 });
 
-mainList.addEventListener("drop", e => {
-    let dragged = document.querySelector(".dragging");
+// drag and drop mobile aka touch events
+
+mainList.addEventListener("touchstart", e => {
+    if (e.target.localName === "span") {
+        let dragged = e.target.parentElement;
+        dragged.classList.add("dragging")
+    }
 })
+
+mainList.addEventListener("touchend", e => {
+    if (e.target.localName === "span") {
+        let dragged = e.target.parentElement;
+        dragged.classList.remove("dragging")
+    }
+})
+
+mainList.addEventListener("touchmove", e => {
+    e.preventDefault();
+    const afterElement = getDragAfterElement(e.targetTouches[0].pageY)
+    const draggable = document.querySelector('.dragging')
+
+    if (afterElement) {
+        mainList.insertBefore(draggable, afterElement)
+    }
+    else {
+        mainList.insertBefore(draggable, lastRow)
+    }
+});
 
 function getDragAfterElement(y) {
     const draggableElements = [...document.querySelectorAll('.list:not(.dragging)')]
@@ -198,6 +241,8 @@ function getDragAfterElement(y) {
         }
     }, { offset: Number.NEGATIVE_INFINITY }).element
 }
+
+// event to change app theme
 
 let varTheme = {
     background: ["hsl(235, 21%, 11%)", "hsl(236, 33%, 92%)"],
@@ -230,3 +275,23 @@ theme.addEventListener("click", () => {
         theme.classList.add("dark")
     }
 })
+
+// event to change nav panel from below the main list 
+// to the last row of the main list 
+
+const navResize = function () {
+    if (document.body.offsetWidth >= 700) {
+        let navPanel = document.querySelector(".filter");
+        let donePanel = document.querySelector(".done");
+        lastRow.insertBefore(navPanel, clearCompleted);
+    }
+
+    if (document.body.offsetWidth < 700) {
+        let navPanel = document.querySelector(".filter");
+        let paraPanel = document.querySelector("p");
+        document.body.insertBefore(navPanel, paraPanel);
+    }
+}
+
+window.onresize = navResize;
+window.onload = navResize;

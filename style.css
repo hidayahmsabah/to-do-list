@@ -11,19 +11,6 @@
     --desktopBg: url(images/bg-desktop-dark.jpg);
 }
 
-/* :root{
-    --background: hsl(236, 33%, 92%);
-    --items: hsl(0, 0%, 98%);
-    --font: hsl(235, 19%, 35%);
-    --secondaryFont: hsl(236, 9%, 61%);
-    --thirdFont: hsl(236, 33%, 92%);
-    --fourthFont: hsl(233, 11%, 84%);
-    --margin: 5%;
-    --border: hsl(236, 33%, 92%);
-    --mobileBg: url(images/bg-mobile-light.jpg);
-    --dekstopBg: url(images/bg-desktop-light.jpg);
-} */
-
 body{
     font-family: "Josefin Sans", sans-serif;
     box-sizing: border-box;
@@ -54,24 +41,27 @@ h1{
 .new{
     display: flex;
     align-items: center;
-    padding: 1em;
+    padding: 1em 0;
 }
 
-.filter {
-    padding: 1em 0;
+.new > .circle{
+    margin-left: 1em;
 }
 
 main, 
 .new, 
 .filter {
     background-color: var(--items);
-    margin: 1em var(--margin);
     border-radius: 0.5rem;
     color: var(--secondaryFont);
+    margin: 1em var(--margin);
+
 }
 
 .filter{
     font-weight: 700;
+    padding: 1em 0;
+
 }
 
 .circle {
@@ -94,7 +84,6 @@ main,
 
 .add{
     transform: rotate(45deg);
-    margin-left: 5%;
 }
 
 main > *{
@@ -135,6 +124,10 @@ main > *{
     cursor: grabbing;
 }
 
+.text:focus{
+    color: var(--font);
+}
+
 p{
     text-align: center;
     color: var(--secondaryFont);
@@ -161,10 +154,6 @@ p{
 
 .padding-border{
     border-bottom: thin var(--border) solid;
-}
-
-.margin-left{
-    margin-left: 5%;
 }
 
 .flex-basis{
@@ -194,21 +183,58 @@ p{
     opacity: 0.2;
 }
 
+h1, 
+.new, 
+main, 
+.filter, 
+p, 
+footer{
+    max-width: 650px;
+}
+
 @media screen and (min-width: 375px) {
     header{
         background: var(--desktopBg) no-repeat;
+        background-size: cover;
         height: 300px;
+    }  
+}
+
+@media screen and (max-width: 650px) {
+    .new{
+        padding-right: 0.5em;   
+    }
+}
+
+
+@media screen and (max-width: 450px) {
+    .new{
+        padding-right: 1em;   
+    }
+}
+
+@media screen and (min-width: 700px) {
+    h1, 
+    .new, 
+    main, 
+    p, 
+    footer{
+        margin-right: auto;
+        margin-left: auto;
+    }
+
+    .filter{
+        margin: 0 15%;
+        padding: 0;
+        flex: 1;
     }
     
 }
 
-  .test{
-      color: hsl(235, 21%, 11%);
-      color: hsl(235, 24%, 19%);
-      color: hsl(234, 39%, 85%);
-      color: hsl(236, 33%, 92%);
-      color: hsl(234, 11%, 52%);
-      color: hsl(233, 14%, 35%);
-      color: hsl(237, 14%, 26%); 
+@media screen and (min-width: 1440px) {
+    h1{
+        margin: 72px auto;
+    }
     
-  }
+}
+
