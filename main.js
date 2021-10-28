@@ -5,7 +5,7 @@ const mainList = document.querySelector(".lists");
 const lastRow = document.querySelector(".last-row");
 const totalItems = document.querySelector(".items");
 const clearCompleted = document.querySelector(".clear");
-const nav = document.querySelectorAll(".filter > ul > *");
+const nav = document.querySelectorAll(".filter li a");
 const theme = document.querySelector(".app-theme");
 
 let originalText = "Create a new todo...";
@@ -305,8 +305,6 @@ function updateFilterNumber(status) {
         second.classList.contains("display-off") ? first-- : false;
         return first;
     }, mlChildren.length)
-
-    console.log(status, mlChildren.length, notDisplayed)
 
     if (status.toLowerCase() !== "all" && mlChildren.length !== 0) {
         if (notDisplayed > 1) {
