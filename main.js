@@ -47,7 +47,7 @@ function createItem(todoItem) {
 
             circle.classList.add("circle");
             addText.classList.add("flex-basis");
-            addingList.classList.add("list");
+            addingList.classList.add("list", "padding-border");
             cross.classList.add("delete");
 
             addingList.insertAdjacentElement('afterbegin', circle);
@@ -55,10 +55,10 @@ function createItem(todoItem) {
             addingList.insertAdjacentElement('beforeend', cross);
             lastRow.insertAdjacentElement('beforebegin', addingList);
 
-            updateNumber();
-
             let current = document.querySelector(".current").classList[0];
-            filter(current);
+            let status = document.querySelector(".current").innerText;
+            filter(current, status);
+
         }
         newText.innerText = originalText;
     }
@@ -72,8 +72,7 @@ mainList.addEventListener("click", e => {
     completedItem(path);
     let current = document.querySelector(".current").classList[0];
     let status = document.querySelector(".current").innerText;
-    filter(current);
-    updateFilterNumber(status);
+    filter(current, status);
 })
 
 function deleteItem(mainPath) {
@@ -95,19 +94,17 @@ function completedItem(mainPath) {
 for (let links of nav) {
     links.addEventListener("click", e => {
         let path = e.path;
-        // console.dir(path)
         let pathClass = path[0].classList[0];
         let status = path[0].innerText;
         path[0].classList.add("current");
-        filter(pathClass);
-        updateFilterNumber(status);
+        filter(pathClass, status);
 
         let notSelected = document.querySelectorAll(`li *:not(.${pathClass})`);
         notSelected.forEach(el => el.classList.remove("current"));
     })
 }
 
-function filter(x) {
+function filter(x, status) {
     let mlChildren = document.querySelectorAll(".list");
     mlChildren.forEach(el => {
         if (x === "active" && el.classList.contains("complete")) {
@@ -120,6 +117,7 @@ function filter(x) {
             el.classList.remove("display-off");
         }
     })
+    updateFilterNumber(status);
 }
 
 //event to clear all completed items
@@ -140,7 +138,6 @@ function updateNumber() {
     let mlChildren = document.querySelectorAll(".list");
     let i = 0;
     mlChildren.forEach(el => {
-        el.classList.add("padding-border");
         if (!el.classList.contains("complete")) {
             i++
         }
@@ -308,6 +305,8 @@ function updateFilterNumber(status) {
         second.classList.contains("display-off") ? first-- : false;
         return first;
     }, mlChildren.length)
+
+    console.log(status, mlChildren.length, notDisplayed)
 
     if (status.toLowerCase() !== "all" && mlChildren.length !== 0) {
         if (notDisplayed > 1) {
