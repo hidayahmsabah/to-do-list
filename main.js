@@ -5,7 +5,7 @@ const mainList = document.querySelector(".lists");
 const lastRow = document.querySelector(".last-row");
 const totalItems = document.querySelector(".items");
 const clearCompleted = document.querySelector(".clear");
-const nav = document.querySelectorAll(".filter > *");
+const nav = document.querySelectorAll(".filter > ul > *");
 const theme = document.querySelector(".app-theme");
 
 let originalText = "Create a new todo...";
@@ -36,7 +36,7 @@ newAdd.addEventListener("click", () => {
 function createItem(todoItem) {
     if (newText.innerText !== originalText) {
         if (newText.innerText !== "") {
-            let addingList = document.createElement("div");
+            let addingList = document.createElement("a");
             let circle = document.createElement("span");
             let addText = document.createElement("span");
             let cross = document.createElement("img");
@@ -71,8 +71,9 @@ mainList.addEventListener("click", e => {
     deleteItem(path);
     completedItem(path);
     let current = document.querySelector(".current").classList[0];
+    let status = document.querySelector(".current").innerText;
     filter(current);
-    updateNumber();
+    updateFilterNumber(status);
 })
 
 function deleteItem(mainPath) {
@@ -92,16 +93,17 @@ function completedItem(mainPath) {
 // event to use the navigations (all, active, completed)
 
 for (let links of nav) {
-    links.addEventListener("click", (e) => {
+    links.addEventListener("click", e => {
         let path = e.path;
+        // console.dir(path)
         let pathClass = path[0].classList[0];
+        let status = path[0].innerText;
         path[0].classList.add("current");
         filter(pathClass);
-        for (let i = 0; i < path[1].children.length; i++) {
-            if (path[1].children[i] !== path[0]) {
-                path[1].children[i].classList.remove("current");
-            }
-        }
+        updateFilterNumber(status);
+
+        let notSelected = document.querySelectorAll(`li *:not(.${pathClass})`);
+        notSelected.forEach(el => el.classList.remove("current"));
     })
 }
 
@@ -261,11 +263,13 @@ theme.addEventListener("click", () => {
     for (let vars of Object.keys(varTheme)) {
         if (theme.classList.contains("dark")) {
             document.documentElement.style.setProperty(`--${vars}`, varTheme[vars][1]);
-            theme.setAttribute("src", "images/icon-moon.svg")
+            theme.setAttribute("src", "images/icon-moon.svg");
+            theme.setAttribute("alt", "Moon icon to switch to dark theme")
         }
         else {
             document.documentElement.style.setProperty(`--${vars}`, varTheme[vars][0]);
-            theme.setAttribute("src", "images/icon-sun.svg")
+            theme.setAttribute("src", "images/icon-sun.svg");
+            theme.setAttribute("alt", "Sun icon to switch to light theme")
         }
     }
     if (theme.getAttribute("src") === "images/icon-moon.svg") {
@@ -286,7 +290,7 @@ const navResize = function () {
         lastRow.insertBefore(navPanel, clearCompleted);
     }
 
-    if (document.body.offsetWidth < 700) {
+    else if (document.body.offsetWidth < 700) {
         let navPanel = document.querySelector(".filter");
         let paraPanel = document.querySelector("p");
         document.body.insertBefore(navPanel, paraPanel);
@@ -295,3 +299,29 @@ const navResize = function () {
 
 window.onresize = navResize;
 window.onload = navResize;
+
+// update number for filtered class
+
+function updateFilterNumber(status) {
+    let mlChildren = [...document.querySelectorAll(".list")];
+    let notDisplayed = mlChildren.reduce((first, second) => {
+        second.classList.contains("display-off") ? first-- : false;
+        return first;
+    }, mlChildren.length)
+
+    if (status.toLowerCase() !== "all" && mlChildren.length !== 0) {
+        if (notDisplayed > 1) {
+            totalItems.innerText = `${notDisplayed} ${status.toLowerCase()} items`;
+        }
+        else if (notDisplayed === 1) {
+            totalItems.innerText = `1 ${status.toLowerCase()} item`;
+        }
+        else {
+            totalItems.innerText = `No ${status.toLowerCase()} item`;
+        }
+    }
+
+    else {
+        updateNumber();
+    }
+}

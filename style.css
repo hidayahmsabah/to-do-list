@@ -102,16 +102,11 @@ main > *{
     font-size: 0.9em;
 }
 
-.filter{
-    display: flex;
-    justify-content: space-evenly;
-}
-
 .new:hover,
 .clear:hover,
 .delete:hover,
 .list > .circle:hover,
-.filter > * ,
+.filter *:hover ,
 .app-theme:hover {
     cursor: pointer;
 }
@@ -128,9 +123,27 @@ main > *{
     color: var(--font);
 }
 
+.filter > *{
+    margin: 0;
+}
+
+.filter *{
+    text-decoration: none;
+    list-style-type: none;
+    display: inline-block;
+    color: var(--secondaryFont);
+
+}
+
+.filter > *{
+    display: flex;
+    justify-content: space-evenly;
+}
+
 p{
     text-align: center;
     color: var(--secondaryFont);
+    margin-top: 3em;
 }
 
 .attribution {
