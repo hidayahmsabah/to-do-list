@@ -49,9 +49,9 @@ function createItem(todoItem) {
             addText.classList.add("flex-basis", "item-text");
             addingList.classList.add("list", "padding-border");
             cross.classList.add("delete");
-            
-            circle.onclick = function() {}; 
-            cross.onclick = function() {}; 
+
+            circle.onclick = function () { };
+            cross.onclick = function () { };
 
             addingList.insertAdjacentElement('afterbegin', circle);
             addingList.insertAdjacentElement('beforeend', addText);
@@ -69,7 +69,7 @@ function createItem(todoItem) {
 
 // events inside main lists area to delete a list or mark as completed
 
-mainList.onclick = function() {};
+mainList.onclick = function () { };
 
 mainList.addEventListener("click", e => {
     let path = e.path;
@@ -96,7 +96,7 @@ function completedItem(mainPath) {
 
 // event to use the navigations (all, active, completed)
 
-for (let links of nav) {
+nav.forEach(links => {
     links.addEventListener("click", e => {
         let path = e.path;
         let pathClass = path[0].classList[0];
@@ -107,7 +107,7 @@ for (let links of nav) {
         let notSelected = document.querySelectorAll(`li *:not(.${pathClass})`);
         notSelected.forEach(el => el.classList.remove("current"));
     })
-}
+})
 
 function filter(x, status) {
     let mlChildren = document.querySelectorAll(".list");
@@ -130,23 +130,16 @@ function filter(x, status) {
 clearCompleted.addEventListener("click", clearComplete);
 
 function clearComplete() {
-    let mlChildren = mainList.children;
-    let len = mlChildren.length - 1;
-    for (let x = len; x >= 0; x--) {
-        if (mlChildren[x].classList.contains("complete")) {
-            mlChildren[x].remove();
-        };
-    };
-}
+    let mlChildren = document.querySelectorAll(".list");
+    mlChildren.forEach(el => el.classList.contains("complete") ? el.remove() : false)
+};
 
 function updateNumber() {
-    let mlChildren = document.querySelectorAll(".list");
-    let i = 0;
-    mlChildren.forEach(el => {
-        if (!el.classList.contains("complete")) {
-            i++
-        }
-    })
+    let mlChildren = [...document.querySelectorAll(".list")];
+    let i = mlChildren.reduce((first, second) => {
+        !second.classList.contains("complete") ? first++ : false;
+        return first;
+    }, 0);
 
     if (i === 1) {
         totalItems.innerText = "1 item left";
@@ -181,7 +174,6 @@ document.onkeydown = function (e) {
 // drag and drop desktop 
 
 mainList.addEventListener("dragstart", e => {
-    console.log(e.target);
     if (e.target.classList.contains("list")) {
         let dragged = e.target;
         dragged.classList.add("dragging")
@@ -197,7 +189,6 @@ mainList.addEventListener("dragend", e => {
 
 mainList.addEventListener("dragover", e => {
     e.preventDefault();
-    console.log(e);
     const afterElement = getDragAfterElement(e.clientY);
     const draggable = document.querySelector('.dragging')
     if (draggable) {
@@ -213,7 +204,6 @@ mainList.addEventListener("dragover", e => {
 // drag and drop mobile aka touch events
 
 mainList.addEventListener("touchstart", e => {
-    console.log(e.target)
     if (e.target.classList.contains("item-text")) {
         let dragged = e.target.parentElement;
         dragged.classList.add("dragging")
@@ -267,7 +257,6 @@ let varTheme = {
     border: ["hsl(233, 14%, 35%)", "hsl(236, 33%, 92%)"],
     mobileBg: ["url(images/bg-mobile-dark.jpg)", "url(images/bg-mobile-light.jpg)"],
     desktopBg: ["url(images/bg-desktop-dark.jpg)", "url(images/bg-desktop-light.jpg)"]
-
 }
 
 theme.addEventListener("click", () => {
