@@ -50,8 +50,8 @@ function createItem(todoItem) {
             addingList.classList.add("list", "padding-border");
             cross.classList.add("delete");
             
-            circle.onclick = function(); 
-            cross.onclick = function(); 
+            circle.onclick = function() {}; 
+            cross.onclick = function() {}; 
 
             addingList.insertAdjacentElement('afterbegin', circle);
             addingList.insertAdjacentElement('beforeend', addText);
@@ -69,7 +69,7 @@ function createItem(todoItem) {
 
 // events inside main lists area to delete a list or mark as completed
 
-mainList.onclick = function();
+mainList.onclick = function() {};
 
 mainList.addEventListener("click", e => {
     let path = e.path;
