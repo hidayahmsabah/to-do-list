@@ -106,8 +106,7 @@ main > *{
 .clear:hover,
 .delete:hover,
 .list > .circle:hover,
-.app-theme:hover,
-a:hover{
+.app-theme:hover{
     cursor: pointer;
 }
 
