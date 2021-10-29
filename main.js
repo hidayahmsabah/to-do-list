@@ -46,7 +46,7 @@ function createItem(todoItem) {
             addingList.setAttribute("draggable", true);
 
             circle.classList.add("circle");
-            addText.classList.add("flex-basis");
+            addText.classList.add("flex-basis", "item-text");
             addingList.classList.add("list", "padding-border");
             cross.classList.add("delete");
             
@@ -95,10 +95,6 @@ function completedItem(mainPath) {
 }
 
 // event to use the navigations (all, active, completed)
-
-nav[0].onclick = function() {};
-nav[1].onclick = function() {};
-nav[2].onclick = function() {};
 
 for (let links of nav) {
     links.addEventListener("click", e => {
