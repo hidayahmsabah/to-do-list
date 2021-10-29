@@ -106,20 +106,18 @@ main > *{
 .clear:hover,
 .delete:hover,
 .list > .circle:hover,
-.filter *:hover ,
 .app-theme:hover,
-a:hover, 
-li:hover{
+a:hover{
     cursor: pointer;
 }
 
-[draggable = "true"]:hover{
+/* [draggable = "true"]:hover{
     cursor: grab;
 }
 
 [draggable = "true"]:active{
     cursor: grabbing;
-}
+} */
 
 .text:focus{
     color: var(--font);
