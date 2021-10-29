@@ -49,6 +49,9 @@ function createItem(todoItem) {
             addText.classList.add("flex-basis");
             addingList.classList.add("list", "padding-border");
             cross.classList.add("delete");
+            
+            circle.onclick = function(); 
+            cross.onclick = function(); 
 
             addingList.insertAdjacentElement('afterbegin', circle);
             addingList.insertAdjacentElement('beforeend', addText);
@@ -65,6 +68,8 @@ function createItem(todoItem) {
 }
 
 // events inside main lists area to delete a list or mark as completed
+
+mainList.onclick = function();
 
 mainList.addEventListener("click", e => {
     let path = e.path;
@@ -90,6 +95,10 @@ function completedItem(mainPath) {
 }
 
 // event to use the navigations (all, active, completed)
+
+nav[0].onclick = function();
+nav[1].onclick = function();
+nav[2].onclick = function();
 
 for (let links of nav) {
     links.addEventListener("click", e => {
@@ -176,39 +185,47 @@ document.onkeydown = function (e) {
 // drag and drop desktop 
 
 mainList.addEventListener("dragstart", e => {
-    let dragged = e.target;
-    dragged.classList.add("dragging")
+    console.log(e.target);
+    if (e.target.classList.contains("list")) {
+        let dragged = e.target;
+        dragged.classList.add("dragging")
+    }
 })
 
 mainList.addEventListener("dragend", e => {
-    let dragged = e.target;
-    dragged.classList.remove("dragging")
+    if (e.target.classList.contains("list")) {
+        let dragged = e.target;
+        dragged.classList.remove("dragging")
+    }
 })
 
 mainList.addEventListener("dragover", e => {
     e.preventDefault();
-    const afterElement = getDragAfterElement(e.clientY)
+    console.log(e);
+    const afterElement = getDragAfterElement(e.clientY);
     const draggable = document.querySelector('.dragging')
-
-    if (afterElement) {
-        mainList.insertBefore(draggable, afterElement)
-    }
-    else {
-        mainList.insertBefore(draggable, lastRow)
+    if (draggable) {
+        if (afterElement) {
+            mainList.insertBefore(draggable, afterElement)
+        }
+        else {
+            mainList.insertBefore(draggable, lastRow)
+        }
     }
 });
 
 // drag and drop mobile aka touch events
 
 mainList.addEventListener("touchstart", e => {
-    if (e.target.localName === "span") {
+    console.log(e.target)
+    if (e.target.classList.contains("item-text")) {
         let dragged = e.target.parentElement;
         dragged.classList.add("dragging")
     }
 })
 
 mainList.addEventListener("touchend", e => {
-    if (e.target.localName === "span") {
+    if (e.target.classList.contains("item-text")) {
         let dragged = e.target.parentElement;
         dragged.classList.remove("dragging")
     }
@@ -218,12 +235,13 @@ mainList.addEventListener("touchmove", e => {
     e.preventDefault();
     const afterElement = getDragAfterElement(e.targetTouches[0].pageY)
     const draggable = document.querySelector('.dragging')
-
-    if (afterElement) {
-        mainList.insertBefore(draggable, afterElement)
-    }
-    else {
-        mainList.insertBefore(draggable, lastRow)
+    if (draggable) {
+        if (afterElement) {
+            mainList.insertBefore(draggable, afterElement)
+        }
+        else {
+            mainList.insertBefore(draggable, lastRow)
+        }
     }
 });
 
